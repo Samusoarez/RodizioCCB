@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#1E5566">
+<meta name="theme-color" content="#0F1618">
 <meta name="description" content="Rodízio de organistas da Congregação Cristã no Brasil · Jd. Aviação">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon-192.png" type="image/png">
@@ -14,26 +14,13 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya+SC:wght@500;700&family=Alegreya+Sans:wght@400;500;700&display=swap">
 <style>
 :root{
-  --bg:#EEF2F1; --surface:#FFFFFF; --surface-2:#E3EAE8; --ink:#1B282C; --muted:#5B6B6F;
-  --line:#CBD6D3; --accent:#1E5566; --accent-ink:#FFFFFF; --brass:#9A7430; --brass-soft:#F3E8D2;
-  --warn:#A8421F; --warn-soft:#F8E1D8; --ok:#2F6B45;
-  --radius:12px;
-  --display:"Alegreya SC", "Palatino Linotype", Georgia, serif;
-  --body:"Alegreya Sans", "Segoe UI", system-ui, sans-serif;
-}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    color-scheme:dark;
-    --bg:#0F1618; --surface:#172124; --surface-2:#1F2C30; --ink:#E4ECEA; --muted:#98A8AB;
-    --line:#2C3B3F; --accent:#7DB5C5; --accent-ink:#0F1618; --brass:#D6B26A; --brass-soft:#2B2618;
-    --warn:#F08E6B; --warn-soft:#3A2119; --ok:#7CC593;
-  }
-}
-:root[data-theme="dark"]{
   color-scheme:dark;
   --bg:#0F1618; --surface:#172124; --surface-2:#1F2C30; --ink:#E4ECEA; --muted:#98A8AB;
   --line:#2C3B3F; --accent:#7DB5C5; --accent-ink:#0F1618; --brass:#D6B26A; --brass-soft:#2B2618;
   --warn:#F08E6B; --warn-soft:#3A2119; --ok:#7CC593;
+  --radius:12px;
+  --display:"Alegreya SC", "Palatino Linotype", Georgia, serif;
+  --body:"Alegreya Sans", "Segoe UI", system-ui, sans-serif;
 }
 *{box-sizing:border-box}
 html,body{background:var(--bg)}
@@ -71,7 +58,7 @@ h2{font-family:var(--display);font-size:19px;letter-spacing:.03em;margin:26px 0 
 .trio{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
 .trio.duo{grid-template-columns:repeat(2,minmax(0,1fr))}
 .cell .l{font-family:var(--display);font-size:11.5px;letter-spacing:.06em;color:var(--muted);display:block}
-.cell .n{font-weight:700;font-size:15.5px;overflow-wrap:break-word;letter-spacing:-.01em}
+.cell .n{font-weight:700;font-size:15.5px;overflow-wrap:normal;word-break:keep-all;letter-spacing:-.01em;display:block;min-width:0}
 .cell.me .n{color:var(--brass);text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
 .cell select{width:100%;padding:6px 2px;font-size:14px!important;border:1px solid var(--line);border-radius:8px;background:var(--surface-2);font-size:15px}
 .cell.bad select{border-color:var(--warn);background:var(--warn-soft)}
@@ -142,6 +129,8 @@ h2{font-family:var(--display);font-size:19px;letter-spacing:.03em;margin:26px 0 
 .og-n{font-weight:700}
 .og-n em{font-style:normal;font-size:12px;color:var(--warn);font-weight:700;margin-left:4px}
 .og-r{font-size:13px;color:var(--muted);text-align:right}
+.og-h .lnk{padding:0}
+.og-h.ac{grid-template-columns:22px 1fr auto auto;cursor:default}
 .chev{color:var(--accent);font-weight:700;font-size:18px;text-align:center}
 .og.off .og-n{color:var(--muted)}
 .og-b{padding:0 0 12px 32px}
@@ -153,6 +142,14 @@ h2{font-family:var(--display);font-size:19px;letter-spacing:.03em;margin:26px 0 
 .row{scroll-margin-top:calc(52px + env(safe-area-inset-top,0px))}
 .row.prox::before{content:"Próximo";position:absolute;top:-9px;left:12px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:var(--accent);color:var(--accent-ink);padding:1px 8px;border-radius:999px}
 .row.prox{border-color:var(--accent);border-width:2px}
+.savebar .in{background:#E4ECEA;color:#0F1618}
+.btn.ghost{color:#0F1618}
+.toast{background:#E4ECEA;color:#0F1618}
+.sep{height:1px;background:var(--line);margin:14px 0}
+.lbl-s{display:block;font-size:14px;font-weight:700;color:var(--muted);margin-bottom:4px}
+.avisos{margin:6px 0 0;padding-left:18px;font-size:14px}
+.field input[type=file]{padding:8px;font-size:14px}
+.anteriores{justify-self:start;color:var(--accent)}
 :focus-visible{outline:3px solid var(--brass);outline-offset:2px}
 @media (max-width:380px){.cell .n{font-size:15px}.row{grid-template-columns:48px 1fr;gap:8px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
@@ -160,10 +157,13 @@ h2{font-family:var(--display);font-size:19px;letter-spacing:.03em;margin:26px 0 
 html{-webkit-text-size-adjust:100%}
 body{margin:0;padding-top:env(safe-area-inset-top,0px)}
 [hidden]{display:none!important}
-header.top{align-items:center}
-.quem{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 12px;font-size:13px;font-weight:700;color:var(--accent);cursor:pointer;display:grid;text-align:right;line-height:1.15;flex-shrink:0}
+header.top{display:block}
+.hrow{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.sub-brand{margin:2px 0 0;font-size:13px;color:var(--muted);font-weight:500}
+.quem{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 12px;font-size:12px;font-weight:700;color:var(--muted);display:grid;text-align:right;line-height:1.15;flex-shrink:0}
 .quem span{color:var(--ink);font-size:14px}
 .acesso{padding-bottom:24px}
+.grp{font-family:var(--display);font-size:15px;letter-spacing:.05em;color:var(--muted);margin:18px 0 8px}
 .nomes{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .nomebtn{border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:16px 12px;font-size:18px;font-weight:700;text-align:left;cursor:pointer}
 .nomebtn:active{background:var(--surface-2)}
@@ -180,6 +180,8 @@ header.top{align-items:center}
 "use strict";
 var EDITORA = (window.RODIZIO_EDITORA||"janaina");
 var SRC = JSON.parse(document.getElementById("dados").textContent);
+function normalizarDados(d){if(!d.ministerio)d.ministerio=[{id:"levi",nome:"Levi"},{id:"thiago",nome:"Thiago"},{id:"josea",nome:"José A."}];return d}
+normalizarDados(SRC);
 var S = JSON.parse(JSON.stringify(SRC));
 var TIPOS = {
   qua:{nome:"Culto oficial", dia:"Quarta", hora:"19:30", roles:["meia","culto","reserva"]},
@@ -195,6 +197,8 @@ var DIASCHIP = [["qua","Qua"],["sab","Sáb"],["dom","Dom noite"],["rjm","RJM"]];
 
 var ui = {view:"proximo", ym:null, edit:false, dirty:false, canEdit:null, art:null, confirm:null, saving:false, eu:null, rasc:null, editDia:null, bkp:null, gerMes:null};
 try{ ui.eu = localStorage.getItem("rodizio-eu"); }catch(e){}
+ui.acessos=null; ui.pedido=null;
+ui.dev=(function(){try{var d=localStorage.getItem("rodizio-dev");if(!d){d=Date.now().toString(36)+Math.random().toString(36).slice(2,10);localStorage.setItem("rodizio-dev",d)}return d}catch(e){return "sem-storage"}})();
 
 function pad(n){return (n<10?"0":"")+n}
 function ymd(dt){return dt.getFullYear()+"-"+pad(dt.getMonth()+1)+"-"+pad(dt.getDate())}
@@ -206,7 +210,10 @@ function cap(s){return s.charAt(0).toUpperCase()+s.slice(1)}
 function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
 function hora(h){return h.replace(":","h")}
 function orgById(id){for(var i=0;i<S.organistas.length;i++) if(S.organistas[i].id===id) return S.organistas[i]; return null}
-function nome(id){if(!id) return "—"; var o=orgById(id); return o?o.nome:cap(id)}
+function minById(id){var L=S.ministerio||[];for(var i=0;i<L.length;i++) if(L[i].id===id) return L[i]; return null}
+function pessoaById(id){return orgById(id)||minById(id)}
+function ehMinisterio(id){return !orgById(id)&&!!minById(id)}
+function nome(id){if(!id) return "—"; var o=pessoaById(id); return o?o.nome:cap(id)}
 function slug(s){return s.normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"")||"org"}
 function ausente(id,d){return S.folgas.some(function(f){return f.org===id && f.de<=d && d<=f.ate})}
 function hoje(){return ymd(new Date())}
@@ -281,6 +288,76 @@ function gerar(ym,variante){
     out.push(svc);
   });
   return {servicos:out,ensaio:{d:quartaSegunda(ym),hora:"19:30",afina:proximaAfinacao(ym)}};
+}
+
+/* ---------- importar Excel ---------- */
+function carregarXLSX(){return window.XLSX?Promise.resolve():new Promise(function(res,rej){var sc=document.createElement("script");sc.src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js";sc.onload=res;sc.onerror=rej;document.head.appendChild(sc)})}
+function normT(x){return String(x==null?"":x).normalize("NFD").replace(/[̀-ͯ]/g,"").toUpperCase().replace(/[^A-Z0-9 ]/g," ").replace(/\s+/g," ").trim()}
+function lev(a,b){var m=a.length,n=b.length,d=[],i,j;for(i=0;i<=m;i++){d[i]=[i]}for(j=0;j<=n;j++)d[0][j]=j;for(i=1;i<=m;i++)for(j=1;j<=n;j++)d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));return d[m][n]}
+function acharOrganista(txt,avisos){
+  var n=normT(txt); if(!n) return "";
+  var L=S.organistas.map(function(o){return {id:o.id,n:normT(o.nome)}});
+  for(var i=0;i<L.length;i++) if(L[i].n===n) return L[i].id;
+  var best=null; L.forEach(function(o){if((n.indexOf(o.n+" ")===0||(/ [A-Z]$/.test(o.n)&&n.indexOf(o.n)===0))&&(!best||o.n.length>best.n.length))best=o});
+  if(best) return best.id;
+  var bd=9,bo=null; L.forEach(function(o){var dd=lev(n,o.n);if(dd<bd){bd=dd;bo=o}});
+  if(bo&&bd<=2&&n.length>=4){avisos.push('"'+String(txt).trim()+'" entendido como '+nome(bo.id)+".");return bo.id}
+  var t=String(txt).trim().toLowerCase().replace(/(^|\s)\S/g,function(c){return c.toUpperCase()});
+  avisos.push('"'+String(txt).trim()+'" não está na lista de organistas.');
+  return t;
+}
+function detectarMes(rows){
+  for(var r=0;r<Math.min(rows.length,8);r++){var t=normT(rows[r].join(" "));
+    for(var m=0;m<12;m++){var mn=normT(MESES[m]);var re=new RegExp("\\b"+mn+"\\b\\s*(20\\d\\d)?");var mm=t.match(re);if(mm){var y=mm[1]||(t.match(/\b20\d\d\b/)||[])[0];if(y)return y+"-"+pad(m+1)}}}
+  return null;
+}
+function interpretarPlanilha(rows,ymPadrao){
+  var avisos=[], ym=detectarMes(rows)||ymPadrao, p=ym.split("-"), y=+p[0], m=+p[1], dim=new Date(y,m,0).getDate();
+  var hdr=-1,col={};
+  for(var r=0;r<rows.length&&hdr<0;r++){
+    var c={};rows[r].forEach(function(v,j){var k=normT(v).replace(/ /g,"");
+      if(k==="DIA"||k==="DATA")c.dia=j;
+      else if(k.indexOf("RJM")>=0){if(k.indexOf("HORA")>=0||k.indexOf("12")===0||k.indexOf("MEIA")>=0)c.rjmMeia=j;else c.rjmCulto=j}
+      else if(k.indexOf("HORA")>=0||k.indexOf("MEIA")>=0)c.meia=j;
+      else if(k==="CULTO")c.culto=j;
+      else if(k.indexOf("RESERVA")>=0)c.reserva=j;});
+    if(c.dia!=null&&c.culto!=null){hdr=r;col=c}
+  }
+  if(hdr<0) throw new Error("Não encontrei o cabeçalho (DIA, 1/2 HORA, CULTO, RESERVA).");
+  var out=[],ensaio=null,emEnsaio=false;
+  function cel(row,j){return j==null?"":String(row[j]==null?"":row[j]).trim()}
+  for(var r2=hdr+1;r2<rows.length;r2++){
+    var row=rows[r2], txt=normT(row.join(" "));
+    if(!txt) continue;
+    var dm=cel(row,col.dia).match(/\d{1,2}/)||(emEnsaio?String(row[0]||"").match(/\d{1,2}/):null);
+    if(txt.indexOf("ENSAIO")>=0&&!dm){emEnsaio=true;continue}
+    if(!dm) continue;
+    var dia=+dm[0]; if(dia<1||dia>dim){avisos.push("Linha com dia "+dia+" ignorada (não existe em "+mesNome(ym)+").");continue}
+    var d=ym+"-"+pad(dia), dow=parse(d).getDay();
+    if(emEnsaio){
+      var hr="19:30",af="";
+      row.forEach(function(v,j){var s2=String(v==null?"":v).trim();var hm=s2.match(/^(\d{1,2})\s*[:hH]\s*(\d{2})$/);if(hm){hr=pad(+hm[1])+":"+hm[2];return}
+        if(j===col.dia||!s2||/^\d+$/.test(s2))return; var ns=normT(s2); if(ns==="ORGANISTA"||ns.indexOf("AFINA")===0)return; af=s2});
+      ensaio={d:d,hora:hr,afina:af?acharOrganista(af,avisos):""};emEnsaio=false;continue;
+    }
+    var t=dow===3?"qua":dow===6?"sab":dow===0?"dom":null;
+    if(!t){avisos.push("Dia "+pad(dia)+" ("+SEM[dow].toLowerCase()+") ignorado: não é dia de culto.");continue}
+    if(dow===0&&(cel(row,col.rjmMeia)||cel(row,col.rjmCulto))) out.push({d:d,t:"rjm",meia:acharOrganista(cel(row,col.rjmMeia),avisos),culto:acharOrganista(cel(row,col.rjmCulto),avisos)});
+    out.push({d:d,t:t,meia:acharOrganista(cel(row,col.meia),avisos),culto:acharOrganista(cel(row,col.culto),avisos),reserva:acharOrganista(cel(row,col.reserva),avisos)});
+  }
+  if(!out.length) throw new Error("Não encontrei nenhum culto na planilha.");
+  if(!ensaio){ensaio={d:quartaSegunda(ym),hora:"19:30",afina:proximaAfinacao(ym)};avisos.push("A planilha não tem ensaio: usei a 4ª segunda-feira ("+fmtCurta(ensaio.d)+") com afinação de "+nome(ensaio.afina)+".")}
+  var vistos={};avisos=avisos.filter(function(a){if(vistos[a])return false;vistos[a]=1;return true});
+  return {ym:ym,data:{servicos:out,ensaio:ensaio},avisos:avisos};
+}
+function lerPlanilha(file){
+  ui.lendo=true;render();
+  carregarXLSX().then(function(){return file.arrayBuffer()}).then(function(buf){
+    var wb=XLSX.read(buf,{type:"array"}); var ws=wb.Sheets[wb.SheetNames[0]];
+    var rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:"",raw:false,blankrows:false});
+    var r=interpretarPlanilha(rows,ui.gerMes||addMonth(ymOf(new Date()),1));
+    ui.lendo=false;ui.gerMes=r.ym;ui.rasc={ym:r.ym,v:0,data:r.data,origem:"excel",avisos:r.avisos};render();irPara("gerar-h");
+  }).catch(function(e){ui.lendo=false;render();toast(e&&e.message&&e.message.indexOf("Não")===0?e.message:"Não consegui ler esse arquivo. Envie um .xlsx no modelo da escala.")});
 }
 
 /* ---------- conflitos ---------- */
@@ -377,6 +454,14 @@ function linhasMes(M,modo){
   M.servicos.forEach(function(s,i){if(!dias[s.d]){dias[s.d]=[];ordem.push(s.d)}dias[s.d].push(i)});
   if(M.ensaio&&M.ensaio.d&&!dias[M.ensaio.d]){dias[M.ensaio.d]=[];ordem.push(M.ensaio.d)}
   ordem.sort();
+  var mesAtual=ordem.length&&ordem[0].slice(0,7)===hj.slice(0,7);
+  var nPassados=ordem.filter(function(d){return d<hj}).length;
+  var ocultar=!modo.preview&&!modo.editMes&&mesAtual&&nPassados>0&&!ui.verAnteriores&&!(modo.editDia&&modo.editDia<hj)&&!(ui.alvo&&ui.alvo<hj);
+  if(!modo.preview&&mesAtual&&nPassados>0&&!modo.editMes){
+    if(ocultar) h+='<button class="btn sm anteriores" data-act="ver-anteriores">Ver dias anteriores ('+nPassados+')</button>';
+    else if(ui.verAnteriores) h+='<button class="btn sm anteriores" data-act="ocultar-anteriores">Ocultar dias anteriores</button>';
+  }
+  if(ocultar) ordem=ordem.filter(function(d){return d>=hj});
   var semAtual=null;
   ordem.forEach(function(d){
     var dt=parse(d), isEns=M.ensaio&&M.ensaio.d===d, ed=modo.editMes||modo.editDia===d;
@@ -441,11 +526,23 @@ function viewGerenciar(){
   h+='</select></div>';
   if(!ui.rasc){
     h+='<p class="note">Distribui as organistas de forma equilibrada, respeita os dias de cada uma'+(S.regraMesmoDia?', e não repete a mesma pessoa no mesmo dia':'')+'. Você vê a prévia antes de salvar.</p>';
-    h+='<div class="actions"><button class="btn pri" data-act="gerar-ger">Gerar prévia de '+mesNome(gm)+'</button></div></div>';
+    h+='<div class="actions"><button class="btn pri" data-act="gerar-ger">Gerar prévia de '+mesNome(gm)+'</button></div>';
+    h+='<div class="sep"></div><div class="field"><label for="xls">Importar escala pronta do Excel</label><input type="file" id="xls" accept=".xlsx,.xls,.csv"'+(ui.lendo?" disabled":"")+'></div><p class="note" style="margin-top:0">'+(ui.lendo?'<b>Lendo a planilha…</b>':'Use o modelo de sempre: colunas DIA, 1/2 HORA, CULTO, RESERVA, 1/2 H.R.J.M, R.J.M e a linha do ENSAIO. Se a planilha tiver o mês escrito (ex.: SETEMBRO 2026), ele é usado; senão vale o mês escolhido acima. Você vê a prévia antes de salvar.')+'</p>';
+    var salvos=Object.keys(S.meses).sort().reverse();
+    if(salvos.length){
+      h+='<div class="sep"></div><label class="lbl-s">Meses salvos</label><div class="meses-s">';
+      salvos.forEach(function(k){
+        h+='<div class="fol"><span>'+cap(mesNome(k))+'</span><button class="lnk warn" data-act="mes-excluir" data-ym="'+k+'">Excluir</button></div>';
+        if(ui.confirm==="exc-"+k) h+='<div class="confirm" style="margin:0 0 8px">Excluir a escala de '+mesNome(k)+'? Ela some para todas.<div class="actions"><button class="btn warn" data-act="mes-excluir-sim" data-ym="'+k+'">Excluir</button><button class="btn" data-act="cancelar">Cancelar</button></div></div>';
+      });
+      h+='</div>';
+    }
+    h+='</div>';
   } else {
     var nconf=Object.keys(conflitosDe(ui.rasc.data)).length;
     h+='<p class="note"><b>Prévia, ainda não salva.</b> '+(S.meses[ui.rasc.ym]?'Ao salvar, substitui a escala atual de '+mesNome(ui.rasc.ym)+'. ':'')+(nconf?'<b style="color:var(--warn)">'+nconf+' ponto(s) para revisar.</b>':'Sem conflitos.')+'</p>';
-    h+='<div class="actions"><button class="btn pri" data-act="rasc-salvar"'+(ui.saving?" disabled":"")+'>'+(ui.saving?"Salvando…":"Salvar escala")+'</button><button class="btn" data-act="rasc-outra">Gerar outra opção</button><button class="btn warn" data-act="rasc-cancelar">Cancelar</button></div></div>';
+    h+='<div class="actions"><button class="btn pri" data-act="rasc-salvar"'+(ui.saving?" disabled":"")+'>'+(ui.saving?"Salvando…":"Salvar escala")+'</button>'+(ui.rasc.origem==="excel"?'':'<button class="btn" data-act="rasc-outra">Gerar outra opção</button>')+'<button class="btn warn" data-act="rasc-cancelar">Cancelar</button></div></div>';
+    if(ui.rasc.avisos&&ui.rasc.avisos.length){h+='<div class="card aviso" style="margin-top:10px"><b>Da planilha:</b><ul class="avisos">';ui.rasc.avisos.forEach(function(a){h+='<li>'+esc(a)+'</li>'});h+='</ul></div>'}
     h+='<div style="margin-top:10px">'+linhasMes(ui.rasc.data,{preview:true})+'</div>';
     h+='<div class="actions"><button class="btn pri" data-act="rasc-salvar"'+(ui.saving?" disabled":"")+'>Salvar escala</button><button class="btn warn" data-act="rasc-cancelar">Cancelar</button></div>';
   }
@@ -467,7 +564,20 @@ function viewGerenciar(){
   });
   h+='<div class="field" style="margin-top:12px"><label for="nova-org">Adicionar organista</label><div style="display:flex;gap:8px"><input id="nova-org" placeholder="Nome"><button class="btn" data-act="add-org">Adicionar</button></div></div></div>';
 
-  h+='<h2>Regras</h2><div class="card"><button class="chip" data-act="regra" aria-pressed="'+S.regraMesmoDia+'">Não repetir a mesma organista no mesmo dia</button><p class="note" style="margin-bottom:0">Vale para domingo: quem toca de manhã (RJM) não entra à noite.</p></div>';
+  h+='<h2>Ministério</h2><p class="note">Têm acesso para ver a escala, mas não entram no rodízio.</p><div class="card og-list">';
+  (S.ministerio||[]).forEach(function(o){
+    h+='<div class="og"><div class="og-h ac"><span class="num"></span><span class="og-n">'+esc(o.nome)+'</span><span></span><button class="lnk warn" data-act="min-rm" data-org="'+o.id+'">Remover</button></div>';
+    if(ui.confirm==="minrm-"+o.id) h+='<div class="confirm" style="margin:0 0 10px">Remover '+esc(o.nome)+' do Ministério?<div class="actions"><button class="btn warn" data-act="min-rm-sim" data-org="'+o.id+'">Remover</button><button class="btn" data-act="cancelar">Cancelar</button></div></div>';
+    h+='</div>';
+  });
+  h+='<div class="field" style="margin:12px 0 10px"><label for="novo-min">Adicionar ao Ministério</label><div style="display:flex;gap:8px"><input id="novo-min" placeholder="Nome"><button class="btn" data-act="add-min">Adicionar</button></div></div></div>';
+  h+='<h2>Acessos</h2><p class="note">Quem já escolheu o nome em um celular. Se alguém trocar de celular ou escolheu o nome errado, toque em Liberar.</p><div class="card og-list">';
+  S.organistas.concat(S.ministerio||[]).forEach(function(o){var ac=ui.acessos&&ui.acessos[o.id];
+    h+='<div class="og"><div class="og-h ac"><span class="num">'+(ac?"✓":"")+'</span><span class="og-n">'+esc(o.nome)+'</span><span class="og-r">'+(ac?"entrou em "+fmtCurta(ac.em.slice(0,10)):"ainda não entrou")+'</span>'+(ac&&o.id!==EDITORA?'<button class="lnk warn" data-act="liberar" data-org="'+o.id+'">Liberar</button>':'<span></span>')+'</div>';
+    if(ui.confirm==="lib-"+o.id) h+='<div class="confirm" style="margin:0 0 10px">Liberar o nome de '+esc(o.nome)+'? O celular dela volta para a lista de nomes.<div class="actions"><button class="btn warn" data-act="liberar-sim" data-org="'+o.id+'">Liberar</button><button class="btn" data-act="cancelar">Cancelar</button></div></div>';
+    h+='</div>';
+  });
+  h+='</div>';
   return h;
 }
 function fmtCurta(d){var dt=parse(d);return pad(dt.getDate())+"/"+pad(dt.getMonth()+1)}
@@ -475,19 +585,31 @@ function podeEditar(){return ui.eu===EDITORA}
 
 function telaAcesso(){
   var h='<div class="wrap acesso"><header class="top"><h1 class="brand">Rodízio de Organistas<small>Congregação Cristã no Brasil · Jd. Aviação</small></h1></header>';
-  h+='<h2>Quem é você?</h2><p class="note">Toque no seu nome. Nas próximas vezes o app já abre direto.</p><div class="nomes">';
-  S.organistas.forEach(function(o){if(o.ativa)h+='<button class="nomebtn" data-act="escolher" data-org="'+o.id+'">'+esc(o.nome)+'</button>'});
-  return h+'</div></div>';
+  if(ui.acessos===null) return h+'<div class="card empty">Carregando…</div></div>';
+  if(ui.pedido){
+    var o=pessoaById(ui.pedido);
+    h+='<h2>Você é '+esc(o?o.nome:"")+'?</h2><div class="card"><p style="margin-top:0">Depois de confirmar, este celular fica sempre no seu nome e ele sai da lista para as outras pessoas.</p><div class="actions" style="margin-bottom:0"><button class="btn pri" data-act="confirmar-nome"'+(ui.saving?" disabled":"")+'>'+(ui.saving?"Confirmando…":"Sim, sou eu")+'</button><button class="btn" data-act="voltar-nomes">Voltar</button></div></div></div>';
+    return h;
+  }
+  var livres=S.organistas.filter(function(o){return o.ativa&&!ui.acessos[o.id]});
+  var livresM=(S.ministerio||[]).filter(function(o){return !ui.acessos[o.id]});
+  h+='<h2>Quem é você?</h2>';
+  if(!livres.length&&!livresM.length) return h+'<div class="card empty">Todos os nomes já foram escolhidos. Se você não consegue entrar, fale com a responsável pela escala.</div></div>';
+  h+='<p class="note">Toque no seu nome. Isso é feito uma vez só: depois o app abre direto no seu nome.</p>';
+  if(livres.length){h+='<div class="grp">Organistas</div><div class="nomes">';livres.forEach(function(o){h+='<button class="nomebtn" data-act="escolher" data-org="'+o.id+'">'+esc(o.nome)+'</button>'});h+='</div>'}
+  if(livresM.length){h+='<div class="grp">Ministério</div><div class="nomes">';livresM.forEach(function(o){h+='<button class="nomebtn" data-act="escolher" data-org="'+o.id+'">'+esc(o.nome)+'</button>'});h+='</div>'}
+  return h+'</div>';
 }
 function render(){
-  if(!ui.eu||!orgById(ui.eu)){app.innerHTML=telaAcesso();return}
+  if(!ui.eu||!pessoaById(ui.eu)){app.innerHTML=telaAcesso();return}
   if(!ui.ym){var f=futuros();ui.ym=f.length?f[0].d.slice(0,7):ymOf(new Date())}
-  var tabs=[["proximo","Próximo"],["mes","Mês"],["minhas","Minha escala"]];
+  var tabs=[["proximo","Próximo"],["mes","Mês"]];
+  if(!ehMinisterio(ui.eu)) tabs.push(["minhas","Minha escala"]); else if(ui.view==="minhas") ui.view="proximo";
   if(podeEditar()) tabs.push(["gerenciar","Gerenciar"]);
   if(ui.view==="gerenciar"&&!podeEditar()) ui.view="proximo";
   if(!podeEditar()) ui.edit=false;
   var body={proximo:viewProximo,mes:viewMes,minhas:viewMinhas,gerenciar:viewGerenciar}[ui.view]();
-  var h='<div class="wrap"><header class="top"><h1 class="brand">Rodízio de Organistas<small>Congregação Cristã no Brasil · Jd. Aviação</small></h1><button class="quem" data-act="trocar" aria-label="Trocar de pessoa"><span>'+esc(nome(ui.eu))+'</span>Trocar</button></header><main>'+body+'</main></div>';
+  var h='<div class="wrap"><header class="top"><div class="hrow"><h1 class="brand">Rodízio de Organistas</h1><span class="quem"><span>'+esc(nome(ui.eu))+'</span>'+(podeEditar()?'Responsável':ehMinisterio(ui.eu)?'Ministério':'Organista')+'</span></div><p class="sub-brand">Congregação Cristã no Brasil · Jd. Aviação</p></header><main>'+body+'</main></div>';
   h+='<nav class="tabbar" aria-label="Seções"><div class="in">';
   tabs.forEach(function(t){h+='<button class="tab" data-tab="'+t[0]+'"'+(ui.view===t[0]?' aria-current="page"':'')+'>'+icon(t[0])+t[1]+'</button>'});
   h+='</div></nav>';
@@ -498,7 +620,7 @@ var toastT;
 function toast(msg){var t=document.querySelector(".toast");if(!t){t=document.createElement("div");t.className="toast";t.setAttribute("role","status");document.body.appendChild(t)}t.textContent=msg;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(function(){t.hidden=true},3200)}
 function irPara(id){setTimeout(function(){var el=document.getElementById(id);if(el)el.scrollIntoView({block:"start",behavior:"smooth"})},30)}
 function proximoDia(){var f=futuros();return f.length?f[0].d:null}
-function focarProximo(suave){var nx=proximoDia();if(!nx||nx.slice(0,7)!==ui.ym)return;setTimeout(function(){var el=document.getElementById("dia-"+nx);if(el)el.scrollIntoView({block:"start",behavior:suave?"smooth":"auto"})},20)}
+function focarProximo(suave){return;var nx=proximoDia();if(!nx||nx.slice(0,7)!==ui.ym)return;setTimeout(function(){var el=document.getElementById("dia-"+nx);if(el)el.scrollIntoView({block:"start",behavior:suave?"smooth":"auto"})},20)}
 function mudou(){ui.dirty=true;render()}
 
 /* ---------- WhatsApp ---------- */
@@ -535,21 +657,52 @@ function copiar(txt,oque){
 function mostrarTexto(txt){var m=document.querySelector("main");var ta=document.createElement("textarea");ta.value=txt;ta.rows=12;ta.style.cssText="width:100%;margin-top:12px;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink)";m.appendChild(ta);ta.focus();ta.select();toast("Selecione e copie o texto abaixo.")}
 
 /* ---------- dados (Firebase Firestore) ---------- */
-var docRef=null;
+var docRef=null, accRef=null;
 function clone(x){return JSON.parse(JSON.stringify(x))}
 function iniciarDados(){
   var cfg=window.FIREBASE_CONFIG;
-  if(!window.firebase||!cfg||!cfg.projectId||/COLE_AQUI/.test(cfg.projectId)){ui.modo="local";try{var l=localStorage.getItem("rodizio-local");if(l){SRC=JSON.parse(l);S=clone(SRC)}}catch(e){}render();return}
-  try{firebase.initializeApp(cfg);docRef=firebase.firestore().collection("rodizio").doc("escala");}catch(e){ui.modo="local";render();return}
+  if(!window.firebase||!cfg||!cfg.projectId||/COLE_AQUI/.test(cfg.projectId)){ui.modo="local";try{var l=localStorage.getItem("rodizio-local");if(l){SRC=normalizarDados(JSON.parse(l));S=clone(SRC)}}catch(e){}
+    try{ui.acessos=JSON.parse(localStorage.getItem("rodizio-acessos-local")||"{}")}catch(e){ui.acessos={}}
+    validarAcesso();render();return}
+  try{firebase.initializeApp(cfg);docRef=firebase.firestore().collection("rodizio").doc("escala");accRef=firebase.firestore().collection("rodizio").doc("acessos");}catch(e){ui.modo="local";ui.acessos={};render();return}
   ui.modo="online";
   docRef.onSnapshot(function(snap){
     if(!snap.exists){ui.semDados=true;semear();render();return}
     ui.semDados=false;
     var d=snap.data();if(!d||!d.json)return;
-    try{SRC=JSON.parse(d.json)}catch(e){return}
+    try{SRC=normalizarDados(JSON.parse(d.json))}catch(e){return}
     if(!ui.dirty&&!ui.editDia&&!ui.rasc&&!ui.saving)S=clone(SRC);
     render();
   },function(){toast("Sem conexão com o banco. Mostrando a última escala carregada.")});
+  accRef.onSnapshot(function(snap){
+    var d=snap.exists?snap.data():null; ui.acessos=(d&&d.nomes)||{};
+    validarAcesso(); semear(); render();
+  },function(){if(ui.acessos===null){ui.acessos={};render()}});
+}
+function validarAcesso(){
+  if(!ui.eu) return;
+  var a=ui.acessos&&ui.acessos[ui.eu];
+  if(!a||a.dev!==ui.dev){
+    ui.eu=null;ui.edit=false;ui.editDia=null;ui.dirty=false;S=clone(SRC);
+    try{localStorage.removeItem("rodizio-eu")}catch(e){}
+    toast("Seu acesso foi liberado. Escolha seu nome de novo.");
+  }
+}
+function guardarAcessosLocal(){try{localStorage.setItem("rodizio-acessos-local",JSON.stringify(ui.acessos))}catch(e){}}
+function reservarNome(id){
+  var reg={dev:ui.dev,em:new Date().toISOString()};
+  if(ui.modo!=="online"){if(ui.acessos[id])return Promise.reject("ocupado");ui.acessos[id]=reg;guardarAcessosLocal();return Promise.resolve()}
+  var db=firebase.firestore();
+  return db.runTransaction(function(tx){return tx.get(accRef).then(function(snap){
+    var nomes=(snap.exists&&snap.data().nomes)||{};
+    if(nomes[id]) throw "ocupado";
+    nomes[id]=reg; tx.set(accRef,{nomes:nomes});
+  })}).then(function(){ui.acessos[id]=reg});
+}
+function liberarNome(id){
+  if(ui.modo!=="online"){delete ui.acessos[id];guardarAcessosLocal();return Promise.resolve()}
+  var upd={};upd["nomes."+id]=firebase.firestore.FieldValue.delete();
+  return accRef.update(upd);
 }
 function semear(){if(docRef&&ui.semDados&&podeEditar()){ui.semDados=false;docRef.set({json:JSON.stringify(SRC),atualizado:firebase.firestore.FieldValue.serverTimestamp(),por:nome(ui.eu)}).catch(function(){ui.semDados=true})}}
 function fimSalvar(){ui.saving=false;ui.dirty=false;ui.editDia=null;ui.bkp=null;SRC=clone(S);toast("Escala salva para todas.");render()}
@@ -566,12 +719,19 @@ function salvar(){
 app.addEventListener("click",function(ev){
   var b=ev.target.closest("[data-tab],[data-act]"); if(!b) return;
   if(b.dataset.tab){ui.view=b.dataset.tab;ui.confirm=null;
-    if(ui.view==="mes"&&!ui.editDia&&!ui.edit){ui.alvo=null;var nx=proximoDia();if(nx)ui.ym=nx.slice(0,7)}
+    if(ui.view==="mes"&&!ui.editDia&&!ui.edit){ui.alvo=null;ui.verAnteriores=false;var nx=proximoDia();if(nx)ui.ym=nx.slice(0,7)}
     render();window.scrollTo(0,0);if(ui.view==="mes")focarProximo(false);return}
   var a=b.dataset.act, id=b.dataset.org, o=id&&orgById(id);
-  if(a==="escolher"){ui.eu=id;try{localStorage.setItem("rodizio-eu",id)}catch(e){}ui.view="proximo";render();window.scrollTo(0,0);semear();if(id===EDITORA)toast("Olá, "+nome(id)+". Você pode editar a escala.");return}
-  if(a==="trocar"){if(ui.dirty){toast("Salve ou descarte as alterações antes de trocar.");return}ui.eu=null;ui.edit=false;ui.editDia=null;try{localStorage.removeItem("rodizio-eu")}catch(e){}render();window.scrollTo(0,0);return}
+  if(a==="escolher"){ui.pedido=id;render();window.scrollTo(0,0);return}
+  if(a==="voltar-nomes"){ui.pedido=null;render();return}
+  if(a==="confirmar-nome"&&ui.pedido&&!ui.saving){var pid=ui.pedido;ui.saving=true;render();
+    reservarNome(pid).then(function(){ui.saving=false;ui.pedido=null;ui.eu=pid;try{localStorage.setItem("rodizio-eu",pid)}catch(e){}ui.view="proximo";render();window.scrollTo(0,0);semear();toast(pid===EDITORA?"Olá, "+nome(pid)+". Você pode editar a escala.":"Olá, "+nome(pid)+"!")},
+    function(err){ui.saving=false;ui.pedido=null;render();toast(err==="ocupado"?"Esse nome já foi escolhido em outro celular.":"Sem conexão. Tente de novo.")});return}
+  if(a==="liberar"&&id){ui.confirm="lib-"+id;render();return}
+  if(a==="liberar-sim"&&id){ui.confirm=null;liberarNome(id).then(function(){toast(nome(id)+" liberada. Ela pode escolher o nome de novo.");render()},function(){toast("Não foi possível liberar agora.")});return}
   if(a==="org-abrir"){ui.orgAberta=ui.orgAberta===id?null:id;ui.confirm=null;render();return}
+  if(a==="ver-anteriores"){ui.verAnteriores=true;render();return}
+  if(a==="ocultar-anteriores"){ui.verAnteriores=false;render();return}
   if(a==="limpar-alvo"){ui.alvo=null;render()}
   else if(a==="mes-prev"){ui.ym=addMonth(ui.ym,-1);render()}
   else if(a==="mes-next"){ui.ym=addMonth(ui.ym,1);render()}
@@ -586,6 +746,11 @@ app.addEventListener("click",function(ev){
   else if(a==="dia-salvar"){ui.dirty=true;salvar()}
   else if(a==="descartar"){S=JSON.parse(JSON.stringify(SRC));ui.dirty=false;ui.edit=false;ui.editDia=null;ui.bkp=null;render();toast("Alterações descartadas.")}
   else if(a==="editar-evento"){var d0=b.dataset.d;ui.view="mes";ui.ym=d0.slice(0,7);ui.bkp={ym:ui.ym,m:JSON.stringify(S.meses[ui.ym]),dirty:ui.dirty};ui.editDia=d0;ui.edit=false;render();irPara("dia-"+d0)}
+  else if(a==="mes-excluir"){ui.confirm="exc-"+b.dataset.ym;render()}
+  else if(a==="mes-excluir-sim"){var ky=b.dataset.ym;delete S.meses[ky];ui.confirm=null;ui.dirty=true;salvar();toast("Escala de "+mesNome(ky)+" excluída.")}
+  else if(a==="min-rm"){ui.confirm="minrm-"+id;render()}
+  else if(a==="min-rm-sim"){S.ministerio=S.ministerio.filter(function(x){return x.id!==id});ui.confirm=null;mudou()}
+  else if(a==="add-min"){var im=document.getElementById("novo-min"),nm=im.value.trim();if(!nm)return;var mid=slug(nm),mb=mid,mc=2;while(pessoaById(mid))mid=mb+(mc++);S.ministerio.push({id:mid,nome:nm});mudou()}
   else if(a==="cancelar"){ui.confirm=null;render()}
   else if(a==="copiar"){copiar(textoMes(ui.ym),"Escala do mês")}
   else if(a==="copiar-semana"){copiar(textoSemana(b.dataset.d),"Escala da semana")}
@@ -596,7 +761,7 @@ app.addEventListener("click",function(ev){
   else if((a==="up"||a==="down")&&o){var L=S.organistas,k=L.indexOf(o),j=a==="up"?k-1:k+1;if(j>=0&&j<L.length){L[k]=L[j];L[j]=o;mudou()}}
   else if(a==="rm"&&o){ui.confirm="rm-"+id;render()}
   else if(a==="rm-sim"&&o){S.organistas.splice(S.organistas.indexOf(o),1);ui.confirm=null;mudou()}
-  else if(a==="add-org"){var inp=document.getElementById("nova-org"),n=inp.value.trim();if(!n)return;var sid=slug(n),base=sid,c=2;while(orgById(sid))sid=base+(c++);S.organistas.push({id:sid,nome:n,dias:["qua","sab","dom"],afina:true,ativa:true});mudou()}
+  else if(a==="add-org"){var inp=document.getElementById("nova-org"),n=inp.value.trim();if(!n)return;var sid=slug(n),base=sid,c=2;while(pessoaById(sid))sid=base+(c++);S.organistas.push({id:sid,nome:n,dias:["qua","sab","dom"],afina:true,ativa:true});mudou()}
   else if(a==="add-fol"){var fo=document.getElementById("fol-org").value,de=document.getElementById("fol-de").value,ate=document.getElementById("fol-ate").value||de;if(!fo||!de){toast("Escolha a organista e a data inicial.");return}if(ate<de){var tmp=de;de=ate;ate=tmp}S.folgas.push({id:"f"+Date.now().toString(36),org:fo,de:de,ate:ate});mudou()}
   else if(a==="rm-fol"){S.folgas=S.folgas.filter(function(f){return f.id!==b.dataset.fol});mudou()}
   else if(a==="regra"){S.regraMesmoDia=!S.regraMesmoDia;mudou()}
@@ -606,6 +771,7 @@ app.addEventListener("change",function(ev){
   var el=ev.target;
   if(el.id==="eu-sel"){ui.eu=el.value||null;try{if(ui.eu)localStorage.setItem("rodizio-eu",ui.eu);else localStorage.removeItem("rodizio-eu")}catch(e){}render();return}
   if(el.id==="ir-data"){ui.alvo=el.value||null;if(ui.alvo){ui.ym=ui.alvo.slice(0,7);ui.edit=false}render();if(ui.alvo){if(document.getElementById("dia-"+ui.alvo))irPara("dia-"+ui.alvo)}return}
+  if(el.id==="xls"&&el.files&&el.files[0]){lerPlanilha(el.files[0]);return}
   if(el.id==="ger-mes"){ui.gerMes=el.value;ui.confirm=null;render();return}
   if(el.dataset.i!=null&&el.dataset.r){var s=S.meses[ui.ym].servicos[+el.dataset.i];s[el.dataset.r]=el.value;mudou();return}
   if(el.id==="sel-afina"){S.meses[ui.ym].ensaio.afina=el.value;mudou();return}
