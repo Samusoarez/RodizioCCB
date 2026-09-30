@@ -180,7 +180,7 @@ header.top{display:block}
 "use strict";
 var EDITORA = (window.RODIZIO_EDITORA||"janaina");
 var SRC = JSON.parse(document.getElementById("dados").textContent);
-function normalizarDados(d){if(!d.ministerio)d.ministerio=[{id:"levi",nome:"Levi"},{id:"thiago",nome:"Thiago"},{id:"josea",nome:"José A."}];return d}
+function normalizarDados(d){if(!d.ministerio)d.ministerio=[{id:"levi",nome:"Levi"},{id:"thiago",nome:"Thiago"},{id:"josea",nome:"José A."},{id:"alvaro",nome:"Alvaro"}];if(!d.administracao)d.administracao=[{id:"admpc",nome:"Adm PC"},{id:"admmac",nome:"Adm MAC"},{id:"admios",nome:"Adm IOS"}];return d}
 normalizarDados(SRC);
 var S = JSON.parse(JSON.stringify(SRC));
 var TIPOS = {
@@ -211,8 +211,10 @@ function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){retur
 function hora(h){return h.replace(":","h")}
 function orgById(id){for(var i=0;i<S.organistas.length;i++) if(S.organistas[i].id===id) return S.organistas[i]; return null}
 function minById(id){var L=S.ministerio||[];for(var i=0;i<L.length;i++) if(L[i].id===id) return L[i]; return null}
-function pessoaById(id){return orgById(id)||minById(id)}
+function admById(id){var L=S.administracao||[];for(var i=0;i<L.length;i++) if(L[i].id===id) return L[i]; return null}
+function pessoaById(id){return orgById(id)||minById(id)||admById(id)}
 function ehMinisterio(id){return !orgById(id)&&!!minById(id)}
+function ehAdm(id){return !orgById(id)&&!!admById(id)}
 function nome(id){if(!id) return "—"; var o=pessoaById(id); return o?o.nome:cap(id)}
 function slug(s){return s.normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"")||"org"}
 function ausente(id,d){return S.folgas.some(function(f){return f.org===id && f.de<=d && d<=f.ate})}
@@ -571,9 +573,16 @@ function viewGerenciar(){
     h+='</div>';
   });
   h+='<div class="field" style="margin:12px 0 10px"><label for="novo-min">Adicionar ao Ministério</label><div style="display:flex;gap:8px"><input id="novo-min" placeholder="Nome"><button class="btn" data-act="add-min">Adicionar</button></div></div></div>';
+  h+='<h2>Administração</h2><p class="note">Podem editar a escala e liberar acessos, como a responsável. Não entram no rodízio.</p><div class="card og-list">';
+  (S.administracao||[]).forEach(function(o){
+    h+='<div class="og"><div class="og-h ac"><span class="num"></span><span class="og-n">'+esc(o.nome)+'</span><span></span>'+(o.id!==ui.eu?'<button class="lnk warn" data-act="adm-rm" data-org="'+o.id+'">Remover</button>':'<span class="og-r">você</span>')+'</div>';
+    if(ui.confirm==="admrm-"+o.id) h+='<div class="confirm" style="margin:0 0 10px">Remover '+esc(o.nome)+' da Administração?<div class="actions"><button class="btn warn" data-act="adm-rm-sim" data-org="'+o.id+'">Remover</button><button class="btn" data-act="cancelar">Cancelar</button></div></div>';
+    h+='</div>';
+  });
+  h+='<div class="field" style="margin:12px 0 10px"><label for="novo-adm">Adicionar à Administração</label><div style="display:flex;gap:8px"><input id="novo-adm" placeholder="Nome"><button class="btn" data-act="add-adm">Adicionar</button></div></div></div>';
   h+='<h2>Acessos</h2><p class="note">Quem já escolheu o nome em um celular. Se alguém trocar de celular ou escolheu o nome errado, toque em Liberar.</p><div class="card og-list">';
-  S.organistas.concat(S.ministerio||[]).forEach(function(o){var ac=ui.acessos&&ui.acessos[o.id];
-    h+='<div class="og"><div class="og-h ac"><span class="num">'+(ac?"✓":"")+'</span><span class="og-n">'+esc(o.nome)+'</span><span class="og-r">'+(ac?"entrou em "+fmtCurta(ac.em.slice(0,10)):"ainda não entrou")+'</span>'+(ac&&o.id!==EDITORA?'<button class="lnk warn" data-act="liberar" data-org="'+o.id+'">Liberar</button>':'<span></span>')+'</div>';
+  S.organistas.concat(S.ministerio||[],S.administracao||[]).forEach(function(o){var ac=ui.acessos&&ui.acessos[o.id];
+    h+='<div class="og"><div class="og-h ac"><span class="num">'+(ac?"✓":"")+'</span><span class="og-n">'+esc(o.nome)+'</span><span class="og-r">'+(ac?"entrou em "+fmtCurta(ac.em.slice(0,10)):"ainda não entrou")+'</span>'+(ac&&o.id!==ui.eu?'<button class="lnk warn" data-act="liberar" data-org="'+o.id+'">Liberar</button>':'<span></span>')+'</div>';
     if(ui.confirm==="lib-"+o.id) h+='<div class="confirm" style="margin:0 0 10px">Liberar o nome de '+esc(o.nome)+'? O celular dela volta para a lista de nomes.<div class="actions"><button class="btn warn" data-act="liberar-sim" data-org="'+o.id+'">Liberar</button><button class="btn" data-act="cancelar">Cancelar</button></div></div>';
     h+='</div>';
   });
@@ -581,7 +590,7 @@ function viewGerenciar(){
   return h;
 }
 function fmtCurta(d){var dt=parse(d);return pad(dt.getDate())+"/"+pad(dt.getMonth()+1)}
-function podeEditar(){return ui.eu===EDITORA}
+function podeEditar(){return !!ui.eu&&(ui.eu===EDITORA||ehAdm(ui.eu))}
 
 function telaAcesso(){
   var h='<div class="wrap acesso"><header class="top"><h1 class="brand">Rodízio de Organistas<small>Congregação Cristã no Brasil · Jd. Aviação</small></h1></header>';
@@ -593,23 +602,25 @@ function telaAcesso(){
   }
   var livres=S.organistas.filter(function(o){return o.ativa&&!ui.acessos[o.id]});
   var livresM=(S.ministerio||[]).filter(function(o){return !ui.acessos[o.id]});
+  var livresA=(S.administracao||[]).filter(function(o){return !ui.acessos[o.id]});
   h+='<h2>Quem é você?</h2>';
-  if(!livres.length&&!livresM.length) return h+'<div class="card empty">Todos os nomes já foram escolhidos. Se você não consegue entrar, fale com a responsável pela escala.</div></div>';
+  if(!livres.length&&!livresM.length&&!livresA.length) return h+'<div class="card empty">Todos os nomes já foram escolhidos. Se você não consegue entrar, fale com a responsável pela escala.</div></div>';
   h+='<p class="note">Toque no seu nome. Isso é feito uma vez só: depois o app abre direto no seu nome.</p>';
   if(livres.length){h+='<div class="grp">Organistas</div><div class="nomes">';livres.forEach(function(o){h+='<button class="nomebtn" data-act="escolher" data-org="'+o.id+'">'+esc(o.nome)+'</button>'});h+='</div>'}
   if(livresM.length){h+='<div class="grp">Ministério</div><div class="nomes">';livresM.forEach(function(o){h+='<button class="nomebtn" data-act="escolher" data-org="'+o.id+'">'+esc(o.nome)+'</button>'});h+='</div>'}
+  if(livresA.length){h+='<div class="grp">Administração</div><div class="nomes">';livresA.forEach(function(o){h+='<button class="nomebtn" data-act="escolher" data-org="'+o.id+'">'+esc(o.nome)+'</button>'});h+='</div>'}
   return h+'</div>';
 }
 function render(){
   if(!ui.eu||!pessoaById(ui.eu)){app.innerHTML=telaAcesso();return}
   if(!ui.ym){var f=futuros();ui.ym=f.length?f[0].d.slice(0,7):ymOf(new Date())}
   var tabs=[["proximo","Próximo"],["mes","Mês"]];
-  if(!ehMinisterio(ui.eu)) tabs.push(["minhas","Minha escala"]); else if(ui.view==="minhas") ui.view="proximo";
+  if(orgById(ui.eu)) tabs.push(["minhas","Minha escala"]); else if(ui.view==="minhas") ui.view="proximo";
   if(podeEditar()) tabs.push(["gerenciar","Gerenciar"]);
   if(ui.view==="gerenciar"&&!podeEditar()) ui.view="proximo";
   if(!podeEditar()) ui.edit=false;
   var body={proximo:viewProximo,mes:viewMes,minhas:viewMinhas,gerenciar:viewGerenciar}[ui.view]();
-  var h='<div class="wrap"><header class="top"><div class="hrow"><h1 class="brand">Rodízio de Organistas</h1><span class="quem"><span>'+esc(nome(ui.eu))+'</span>'+(podeEditar()?'Responsável':ehMinisterio(ui.eu)?'Ministério':'Organista')+'</span></div><p class="sub-brand">Congregação Cristã no Brasil · Jd. Aviação</p></header><main>'+body+'</main></div>';
+  var h='<div class="wrap"><header class="top"><div class="hrow"><h1 class="brand">Rodízio de Organistas</h1><span class="quem"><span>'+esc(nome(ui.eu))+'</span>'+(ehAdm(ui.eu)?'Administração':podeEditar()?'Responsável':ehMinisterio(ui.eu)?'Ministério':'Organista')+'</span></div><p class="sub-brand">Congregação Cristã no Brasil · Jd. Aviação</p></header><main>'+body+'</main></div>';
   h+='<nav class="tabbar" aria-label="Seções"><div class="in">';
   tabs.forEach(function(t){h+='<button class="tab" data-tab="'+t[0]+'"'+(ui.view===t[0]?' aria-current="page"':'')+'>'+icon(t[0])+t[1]+'</button>'});
   h+='</div></nav>';
@@ -748,6 +759,9 @@ app.addEventListener("click",function(ev){
   else if(a==="editar-evento"){var d0=b.dataset.d;ui.view="mes";ui.ym=d0.slice(0,7);ui.bkp={ym:ui.ym,m:JSON.stringify(S.meses[ui.ym]),dirty:ui.dirty};ui.editDia=d0;ui.edit=false;render();irPara("dia-"+d0)}
   else if(a==="mes-excluir"){ui.confirm="exc-"+b.dataset.ym;render()}
   else if(a==="mes-excluir-sim"){var ky=b.dataset.ym;delete S.meses[ky];ui.confirm=null;ui.dirty=true;salvar();toast("Escala de "+mesNome(ky)+" excluída.")}
+  else if(a==="adm-rm"){ui.confirm="admrm-"+id;render()}
+  else if(a==="adm-rm-sim"){S.administracao=S.administracao.filter(function(x){return x.id!==id});ui.confirm=null;mudou()}
+  else if(a==="add-adm"){var ia=document.getElementById("novo-adm"),na=ia.value.trim();if(!na)return;var aid=slug(na),ab=aid,ac2=2;while(pessoaById(aid))aid=ab+(ac2++);S.administracao.push({id:aid,nome:na});mudou()}
   else if(a==="min-rm"){ui.confirm="minrm-"+id;render()}
   else if(a==="min-rm-sim"){S.ministerio=S.ministerio.filter(function(x){return x.id!==id});ui.confirm=null;mudou()}
   else if(a==="add-min"){var im=document.getElementById("novo-min"),nm=im.value.trim();if(!nm)return;var mid=slug(nm),mb=mid,mc=2;while(pessoaById(mid))mid=mb+(mc++);S.ministerio.push({id:mid,nome:nm});mudou()}
